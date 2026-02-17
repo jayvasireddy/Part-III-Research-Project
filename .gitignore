@@ -1,0 +1,27 @@
+# --- Virtual environments ---
+.venv/
+.venv_wsl/
+venv/
+env/
+
+# --- Python/Jupyter caches ---
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# --- SBI / experiment logs ---
+sbi-logs/
+**/sbi-logs/
+
+# --- Torch / model / results artifacts (you have lots of these) ---
+*.pt
+*.pth
+*.ckpt
+
+# --- Office temp files ---
+~$*.docx
+
+# --- VS Code / OS ---
+.vscode/
+.DS_Store
+Thumbs.db
