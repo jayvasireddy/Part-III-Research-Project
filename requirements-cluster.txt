@@ -1,0 +1,13 @@
+numpy
+scipy
+matplotlib
+pandas
+torch
+sbi
+joblib
+arviz
+jupyter
+ipykernel
+notebook
+camb
+healpy

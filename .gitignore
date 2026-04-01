@@ -12,11 +12,16 @@ __pycache__/
 # --- SBI / experiment logs ---
 sbi-logs/
 **/sbi-logs/
+logs/
 
-# --- Torch / model / results artifacts (you have lots of these) ---
+# --- Torch / model / results artifacts ---
 *.pt
 *.pth
 *.ckpt
+*.npy
+*.npz
+*.pkl
+outputs/
 
 # --- Office temp files ---
 ~$*.docx
