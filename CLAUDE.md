@@ -1,5 +1,7 @@
 # CLAUDE.md — Project Context for Claude Code
 
+@Fixing Posteriors.md
+
 ## Who I Am
 
 **Name:** Jay Vasireddy  
