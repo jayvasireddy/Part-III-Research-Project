@@ -1,6 +1,7 @@
 # CLAUDE.md — Project Context for Claude Code
 
 @Fixing Posteriors.md
+@pipeline_methodology.md
 
 ## Who I Am
 
