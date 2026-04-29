@@ -2,6 +2,7 @@
 
 @Fixing Posteriors.md
 @pipeline_methodology.md
+@methodology_discussion_notes.md
 
 ## Who I Am
 
