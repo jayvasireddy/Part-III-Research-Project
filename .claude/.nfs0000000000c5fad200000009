@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(python3 /tmp/insert_lv_pairplots.py)"
-    ]
-  }
-}
