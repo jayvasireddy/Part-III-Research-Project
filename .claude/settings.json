@@ -7,7 +7,11 @@
       "Bash(cp \"2D Gaussian Example/Gaussian_with_off_diag.ipynb\" \"/tmp/Gaussian_with_off_diag.ipynb.bak\")",
       "Bash(python3 /tmp/insert_g2d_pairplots.py)",
       "Bash(python3 -c 'import json; nb=json.load\\(open\\('\\\\''__TRACKED_VAR__'\\\\''\\)\\); print\\('\\\\''OK __TRACKED_VAR__ cells='\\\\'', len\\(nb['\\\\''cells'\\\\'']\\)\\)')",
-      "Bash(python)"
+      "Bash(python)",
+      "Bash(python3 /tmp/inject_classical_cells.py)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
     ]
   }
 }
