@@ -11,7 +11,12 @@
       "Bash(python3 /tmp/inject_classical_cells.py)",
       "Bash(python -c ' *)",
       "Bash(python -c 'import json; json.load\\(open\\('\\\\''__TRACKED_VAR__'\\\\''\\)\\)')",
-      "Bash(tmux ls *)"
+      "Bash(tmux ls *)",
+      "Bash(/data/vault/jv447/venvs/research-project/bin/python check_env.py)",
+      "Read(//data/vault/jv447/venvs/research-project/share/jupyter/kernels/python3/**)",
+      "Read(//home/jv447/.local/share/jupyter/kernels/research-project/**)",
+      "Bash(sed -i 's|cal\\) NB=\"Cmb_Test_signal_perturbation_output.ipynb\"|cal\\) NB=\"/tmp/_smoke.ipynb\"|' /tmp/_run_smoke.sh)",
+      "Bash(bash /tmp/_run_smoke.sh cal)"
     ],
     "additionalDirectories": [
       "/tmp"
