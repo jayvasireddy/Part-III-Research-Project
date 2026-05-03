@@ -427,6 +427,61 @@ for multiplier_val in multipliers_to_test:
 
 ---
 
+### Stage 13a: Refactored Sweep — Null Once, Perturbed Many (2026-05-03)
+
+Calling `calibrate_null_dkl_and_perturb_mean` inside a multiplier sweep recomputes the null distribution at every $\alpha$, even though the null is $\alpha$-independent. The two estimators it returns also have very different sample-size requirements:
+
+- **Null 95th percentile** — only ~5% of samples land in the tail, so quantile noise scales as $1/\sqrt{0.05N}$. Needs $N \sim 1000$–$2000$ for stability.
+- **Perturbed median** — uses the entire distribution, well behaved at $N \sim 200$–$300$.
+
+To exploit this, the sweep is now factored into two helpers (added to all four CMB notebooks):
+
+```python
+def calibrate_null_dkl_only(posterior1, posterior2, prior, N, n_theta,
+                             compressor, ...):
+    """Null distribution of D_KL — run ONCE at high N (1000–2000)."""
+    dkls = np.zeros(N)
+    for i in range(N):
+        theta_i = ...
+        x1_i = blanket_simulator(..., null instrument, seed_noise=i + 1_000_000)
+        x2_i = blanket_simulator(..., null instrument, seed_noise=i + 2_000_000)
+        dkls[i], _, _ = calc_dkl(posterior1, posterior2, x1_i, x2_i, n_theta=n_theta)
+    return dkls, float(np.quantile(dkls, 0.95))
+
+
+def calibrate_perturb_dkl_only(posterior1, posterior2, prior, N, n_theta,
+                                compressor, ..., multiplier):
+    """Perturbed distribution at one multiplier — lower N (200–300) is fine."""
+    dkls_p = np.zeros(N)
+    for i in range(N):
+        theta_i = ...
+        x1_i      = blanket_simulator(..., null instrument,      seed_noise=i + 1_000_000)
+        x2_i_pert = blanket_simulator(..., perturbed instrument, seed_noise=i + 2_000_000)
+        dkls_p[i], _, _ = calc_dkl(posterior1, posterior2, x1_i, x2_i_pert, n_theta=n_theta)
+    return dkls_p, float(np.median(dkls_p))
+```
+
+The sweep loop becomes:
+
+```python
+N_null, N_pert, n_theta_sweep = 1000, 300, 500
+dkls, crit_val_95 = calibrate_null_dkl_only(..., N_null, n_theta_sweep, ...)
+
+for m in multipliers_to_test:
+    dkls_p, median_p = calibrate_perturb_dkl_only(..., N_pert, n_theta_sweep, ..., multiplier=m)
+    detected = median_p >= crit_val_95
+```
+
+**Why this matters:**
+
+1. The null distribution is computed once instead of `N_alphas` times — typically a 5–10× saving on a multi-α sweep.
+2. The perturbed helper skips the second null `x2_i` simulation, cutting one CAMB call per iteration (~33% saving per perturbed realisation).
+3. The 95th percentile is estimated from many more samples ($N_{\text{null}} = 1000$ vs the previous 200), giving ~3× tighter MC error on the threshold.
+
+**Status:** Applied to `Cmb_Test_signal_perturbation_output.ipynb`, `CMB_Test_Beam_Telescope_newest.ipynb`, `CMB_Test_Beam_Miscalibration_Odd_Even_Split.ipynb`, and `CMB_Test_Noise_Detector_newest.ipynb`. The original `calibrate_null_dkl_and_perturb_mean` is retained for backwards compatibility with single-$\alpha$ call sites.
+
+---
+
 ## Full Pipeline Flow Summary
 
 ```
