@@ -16,7 +16,13 @@
       "Read(//data/vault/jv447/venvs/research-project/share/jupyter/kernels/python3/**)",
       "Read(//home/jv447/.local/share/jupyter/kernels/research-project/**)",
       "Bash(sed -i 's|cal\\) NB=\"Cmb_Test_signal_perturbation_output.ipynb\"|cal\\) NB=\"/tmp/_smoke.ipynb\"|' /tmp/_run_smoke.sh)",
-      "Bash(bash /tmp/_run_smoke.sh cal)"
+      "Bash(bash /tmp/_run_smoke.sh cal)",
+      "Bash(python3)",
+      "Bash(python3 -c \"import ast; ast.parse\\(open\\('/tmp/lv_kl_check.py'\\).read\\(\\)\\); print\\('LV_KL_Calibrate: parses OK'\\)\")",
+      "Bash(python3 -c \"import ast; ast.parse\\(open\\('/tmp/lv_cal_check.py'\\).read\\(\\)\\); print\\('LV_CAL_Testing: parses OK'\\)\")",
+      "Bash(tmux list-sessions *)",
+      "Bash(tmux capture-pane *)",
+      "Bash(xargs ls -lh)"
     ],
     "additionalDirectories": [
       "/tmp"
