@@ -1,7 +1,9 @@
 """
-Example data realisation from the 2D Gaussian likelihood at theta_obs:
-    x ~ N(theta_obs + l, sigma^2 I)
+Data realisations from the 2D Gaussian likelihood at theta_obs:
+    null:        x ~ N(theta_obs + l,           sigma^2 I)
+    systematic:  x ~ N(theta_obs + l + delta,   sigma^2 I)
 1D marginals on the diagonal, 2D joint off-diagonal (getdist).
+delta = 0.36 is the empirical sensitivity threshold from the KL sweep.
 """
 
 import numpy as np
@@ -10,37 +12,45 @@ from getdist import MCSamples, plots
 
 rng       = np.random.default_rng(0)
 N         = 20_000
+delta     = 0.36                                          # sensitivity-threshold shift
+
 theta_obs = theta_observed.detach().cpu().numpy().reshape(2)
-mu        = theta_obs + loc1
-cov       = scale1 * np.eye(2)
+mu_null   = theta_obs + loc1                              # null mean
+mu_syst   = theta_obs + loc1 + delta                      # shift applied to both dims
+cov       = scale1 * np.eye(2)                            # likelihood covariance
 
-draws = rng.multivariate_normal(mu, cov, size=N)
+draws_null = rng.multivariate_normal(mu_null, cov, size=N)
+draws_syst = rng.multivariate_normal(mu_syst, cov, size=N)
 
-samples = MCSamples(
-    samples=draws,
+samples_null = MCSamples(
+    samples=draws_null,
     names=["x1", "x2"],
     labels=[r"x_1", r"x_2"],
-    label="Example data realisation",
+    label="Null",
+)
+samples_syst = MCSamples(
+    samples=draws_syst,
+    names=["x1", "x2"],
+    labels=[r"x_1", r"x_2"],
+    label=fr"Systematic ($\delta={delta}$)",
 )
 
 g = plots.get_subplot_plotter(width_inch=5)
-g.settings.alpha_filled_add = 0.6
-g.settings.axes_fontsize    = 11
-g.settings.lab_fontsize     = 13
-g.settings.legend_fontsize  = 12
+g.settings.alpha_filled_add     = 0.6
+g.settings.axes_fontsize        = 11
+g.settings.lab_fontsize         = 13
+g.settings.legend_fontsize      = 12
 g.settings.title_limit_fontsize = 12
 
 g.triangle_plot(
-    samples,
+    [samples_null, samples_syst],
     filled=True,
-    contour_colors=["#4C72B0"],
+    contour_colors=["#4C72B0", "#C44E52"],
     legend_loc="upper right",
-    title_limit=1,
 )
 
 g.fig.suptitle(
-    r"Example data realisation:  $\mathbf{x}\sim p(\mathbf{x}\mid\boldsymbol{\theta}_{\mathrm{obs}})"
-    r" = \mathcal{N}(\boldsymbol{\theta}_{\mathrm{obs}}+\boldsymbol{\ell},\ \sigma^{2}\mathbf{I})$",
+    r"Data realisations:  null vs.\ systematic shift $\delta=0.36$",
     fontsize=13, y=1.02,
 )
 

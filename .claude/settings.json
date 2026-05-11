@@ -22,7 +22,8 @@
       "Bash(python3 -c \"import ast; ast.parse\\(open\\('/tmp/lv_cal_check.py'\\).read\\(\\)\\); print\\('LV_CAL_Testing: parses OK'\\)\")",
       "Bash(tmux list-sessions *)",
       "Bash(tmux capture-pane *)",
-      "Bash(xargs ls -lh)"
+      "Bash(xargs ls -lh)",
+      "Bash(awk 'NR>=3270 && NR<=3360' \"/data/vault/jv447/repos/Part-III-Research-Project/2D Gaussian Example/Adapting Current Code.ipynb\")"
     ],
     "additionalDirectories": [
       "/tmp"
